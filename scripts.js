@@ -35,6 +35,7 @@ const toggleClock = reset => {
         clockTimer = setInterval(() => {
             currentTimeLeftInSession--
             displayCurrentTimeLeftInSession()
+            notifyMe(currentTimeLeftInSession)
         }, 1000)
     }
 }
@@ -61,4 +62,29 @@ const stopClock = () => {
     isClockRunning = false
     currentTimeLeftInSession = workSessionDuration
     displayCurrentTimeLeftInSession()
-  }
+}
+
+function notifyMe(time) {
+
+    if (!("Notification" in window)) {
+      alert("Este browser não suporta notificações de Desktop");
+    }
+    else if (Notification.permission === 'granted') {
+        if(time === 300){
+            let firstWarning = new Notification('Faltam 5 minutos')
+        }else if(time === 1){
+            let finalWarning = new Notification('Tempo encerrado!')
+        }
+    }  
+    else if (Notification.permission !== 'denied') {
+      Notification.requestPermission(function (permission) {
+        if (permission === "granted") {
+            if(time === 300){
+                let firstWarning = new Notification('Faltam 5 minutos')
+            }else if(time === 1){
+                let finalWarning = new Notification('Tempo encerrado!')
+            }
+        }
+      });
+    }
+}
